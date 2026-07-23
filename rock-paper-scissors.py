@@ -1,7 +1,7 @@
 import random
 import pygame
 
-class button():
+class Button():
 
     def __init__(self, x, y, pos, width, height):
         self.x = x
@@ -12,7 +12,7 @@ class button():
 
     def clicked(self, pos):
         self.pos = pygame.mouse.get_pos()
-        if self.pos[0] > self.x and self.pos[0] < self.x + self.height:
+        if self.pos[0] > self.x and self.pos[0] < self.x + self.width:
             if self.pos[1] > self.y and self.pos[1] < self.y + self.height:
                 return True
         return False
@@ -56,28 +56,58 @@ class RpsGame():
 
         self.font = pygame.font.Font(('Splatch.ttf'), 90)
 
-        self.text = self.font.render(f" ", True, (255, 255, 255))
+        self.text = self.font.render(" ", True, (255, 255, 255))
 
         self.pl_score = 0
 
         self.pc_score = 0
 
     def player(self):
-        if self.rock_btn.clicked(30):
-          self.p.option = 'rock'
-          self.screen.blit (self.choose_rock , (120,200))
-        elif self.paper_btn.clicked(340):
-          self.p_option ='paper'
-          self.screen.blit (self.choose_paper , (120,200))
-        else: 
-          self.scissors_btn.clicked(640)
-          self.p_option ='scissors'
-          self.screen.blit (self.choose_scissors , (120,200))
+        if self.rock_btn.clicked((0, 0)):
+            self.p_option = 'rock'
+            self.screen.blit(self.choose_rock, (120, 200))
+        elif self.paper_btn.clicked((0, 0)):
+            self.p_option = 'paper'
+            self.screen.blit(self.choose_paper, (120, 200))
+        else:
+            self.scissors_btn.clicked((0, 0))
+            self.p_option = 'scissors'
+            self.screen.blit(self.choose_scissors, (120, 200))
 
         return self.p_option
+
     def computer(self):
         self.pc_random_choice = " "
 
-        
-        
-        
+        options = ["rock", "paper", "scissors"]
+
+        self.pc_choice = random.choice(options)
+
+        if self.pc_choice == "rock":
+            self.pc_random_choice = "rock"
+        elif self.pc_choice == "paper":
+            self.pc_random_choice = "paper"
+        elif self.pc_choice == "scissors":
+            self.pc_random_choice = "scissors"
+
+        return self.pc_choice
+
+    def run(self):
+        run = True
+        while run:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    self.player()
+                    self.computer()
+
+            pygame.display.update()
+
+        pygame.quit()
+
+
+if __name__ == "__main__":
+    game = RpsGame()
+    game.run()
